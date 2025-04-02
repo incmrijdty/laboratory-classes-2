@@ -29,23 +29,42 @@ server.listen(config.PORT);
   🏗 Structo the Builder  
   Utwórz instancję aplikacji express i zapisz ją w stałej app.  
 */
+const app = express();
 /*
   🏗 Structo the Builder  
   Zarejestruj middleware body-parser do parsowania ciał formularzy. 
 */
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 /*
   🏗 Structo the Builder  
   Dodaj middleware logujący informacje o każdym przychodzącym żądaniu.  
 */
+app.use((req, res, next) => {
+  logger.getInfoLog(req.method, req.url);
+  next();
+});
 /*
   🏗 Structo the Builder  
   Zarejestruj middleware obsługujące poszczególne ścieżki.  
 */
+app.use('/product', productRoutes);
+app.use('/logout', logoutRoutes);
+app.use('/kill', killRoutes);
+app.use('/', homeRoutes);
 /*
   🏗 Structo the Builder  
     Obsłuż stronę 404 – zwróć plik 404.html i zaloguj błąd.   
 */
+app.use((req, res) => {
+  res.status(STATUS_CODE.NOT_FOUND);
+  res.sendFile(path.join(__dirname, 'views', '404.html'));
+  logger.getErrorLog(req.url);
+});
 /*
   🏗 Structo the Builder  
     Uruchom serwer i nasłuchuj na porcie z config.js.    
 */
+app.listen(config.PORT, () => {
+  console.log(`Server is running on port ${config.PORT}`);
+});

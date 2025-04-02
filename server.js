@@ -2,6 +2,17 @@
   📦 Dependy the Importer  
   Zaimportuj wszystkie wymagane moduły: path, express, body-parser, logger oraz routing.  
 */
+
+const path = require("path");
+const express = require("express");
+const bodyParser = require("body-parser");
+const logger = require("./logger");
+const productRoutes = require("./routing/product");
+const logoutRoutes = require("./routing/logout");
+const killRoutes = require("./routing/kill");
+const homeRoutes = require("./routing/home");
+const { STATUS_CODE } = require("../constants/statusCode");
+
 const http = require("http");
 const config = require("./config");
 const { requestRouting } = require("./routing/routing");

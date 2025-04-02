@@ -6,12 +6,12 @@
 const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
-const logger = require("./logger");
+const logger = require("./utils/logger");
 const productRoutes = require("./routing/product");
 const logoutRoutes = require("./routing/logout");
 const killRoutes = require("./routing/kill");
 const homeRoutes = require("./routing/home");
-const { STATUS_CODE } = require("../constants/statusCode");
+const { STATUS_CODE } = require("./constants/statusCode");
 
 const http = require("http");
 const config = require("./config");

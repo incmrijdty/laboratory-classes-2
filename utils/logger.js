@@ -7,7 +7,13 @@ const getInfoLog = (method, url) => {
   );
 };
 
-const getErrorLog = (url) => {};
+const getErrorLog = (url) => {
+  console.warn(
+    `ERROR (${new Date(
+      Date.now()
+    ).toUTCString()}): requested url ${url} doesn't exist.`
+  );
+};
 
 const getProcessLog = (message) => {};
 

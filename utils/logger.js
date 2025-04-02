@@ -15,7 +15,13 @@ const getErrorLog = (url) => {
   );
 };
 
-const getProcessLog = (message) => {};
+const getProcessLog = () => {
+  console.log(
+      `PROCESS (${new Date(
+        Date.now()
+      ).toUTCString()}): logout has been initiated and the application will be closed.`
+    );
+};
 
 module.exports = {
   getInfoLog,

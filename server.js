@@ -7,10 +7,10 @@ const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const logger = require("./logger");
-const productRoutes = require("./routing/product");
-const logoutRoutes = require("./routing/logout");
-const killRoutes = require("./routing/kill");
-const homeRoutes = require("./routing/home");
+const { productRouting: productRoutes } = require("./routing/product");
+const { logoutRouting: logoutRoutes } = require("./routing/logout");
+const { killRouting: killRoutes } = require("./routing/kill");
+const { homeRouting: homeRoutes } = require("./routing/home");
 const { STATUS_CODE } = require("../constants/statusCode");
 
 const http = require("http");

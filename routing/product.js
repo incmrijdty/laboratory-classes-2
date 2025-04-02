@@ -24,20 +24,15 @@ router.post("/add", (req, res) => {
   });
 });
 
-// GET /product/new - Show the new product page with the product data from product.txt
 router.get("/new", (req, res) => {
-  // Read the content of product.txt
   fs.readFile("./product.txt", "utf-8", (err, data) => {
     if (err || !data) {
       res.send("Error reading product data.");
     } else {
-      // Render the new product page with the data
-      renderNewProductPage(res, data);
-    }
+      renderNewProductPage(res, data); 
+  }
   });
 });
 
 module.exports = router;
 
-
-//        return response.end();

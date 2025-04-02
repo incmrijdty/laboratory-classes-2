@@ -1,72 +1,57 @@
 const fileSystem = require("fs");
 const { STATUS_CODE } = require("../constants/statusCode");
+const path = require("path");
+const renderNewProductPage = require("../views/renderNewProductPage");
+const express = require("express");
+const router = express.Router();
+
+router.get("/add", (req, res) => {
+  res.sendFile(path.join(__dirname, "..", "views", "add-product.html"));
+});
+
+// POST /product/add - Save the product data to product.txt and redirect to /product/new
+router.post("/add", (req, res) => {
+  const { name, description } = req.body;
+
+  // Create a string to append to product.txt
+  const newProductData = `${name} - ${description}\n`;
+
+  // Append the new product data to product.txt
+  fs.appendFile("./product.txt", newProductData, (err) => {
+    if (err) {
+      res.status(STATUS_CODE.INTERNAL_SERVER_ERROR).send("Error saving product.");
+    } else {
+      // Redirect to the new product page
+      res.status(STATUS_CODE.FOUND).redirect("/product/new");
+    }
+  });
+});
+
+// GET /product/new - Show the new product page with the product data from product.txt
+router.get("/new", (req, res) => {
+  // Read the content of product.txt
+  fs.readFile("./product.txt", "utf-8", (err, data) => {
+    if (err || !data) {
+      res.status(STATUS_CODE.INTERNAL_SERVER_ERROR).send("Error reading product data.");
+    } else {
+      // Render the new product page with the data
+      renderNewProductPage(res, data);
+    }
+  });
+});
+
+module.exports = router;
+
+
+
 
 const productRouting = (request, response) => {
   const { url, method } = request;
-
-  if (url.includes("add") && method === "GET") {
-    return renderAddProductPage(response);
-  }
-
-  if (url.includes("add") && method === "POST") {
-    return addNewProduct(request, response);
-  }
-
-  if (url.includes("new")) {
-    return renderNewProductPage(response);
-  }
 
   console.warn(`ERROR: requested url ${url} doesn't exist.`);
   return;
 };
 
-const renderAddProductPage = (response) => {
-  response.setHeader("Content-Type", "text/html");
-  response.write("<html>");
-  response.write("<head><title>Shop - Add product</title></head>");
-  response.write("<body>");
-  response.write("<h1>Add product</h1>");
-  response.write("<form action='/product/add' method='POST'>");
-  response.write(
-    "<br /><label>Name<br /><input type='text' name='name'></label>"
-  );
-  response.write(
-    "<br /><label>Description<br /><input type='text' name='description'></label>"
-  );
-  response.write("<br /><button type='submit'>Add</button>");
-  response.write("</form>");
-  response.write(
-    "<nav><a href='/'>Home</a><br /><a href='/product/new'>Newest product</a><br /><a href='/logout'>Logout</a></nav>"
-  );
-  response.write("</body>");
-  response.write("</html>");
-
-  return response.end();
-};
-
-const renderNewProductPage = (response) => {
-  fileSystem.readFile("./product.txt", "utf-8", (err, data) => {
-    response.setHeader("Content-Type", "text/html");
-    response.write("<html>");
-    response.write("<head><title>Shop - Newest product</title></head>");
-    response.write("<body>");
-    response.write("<h1>Newest product</h1>");
-    response.write(
-      "<nav><a href='/'>Home</a><br /><a href='/product/add'>Add product</a><br /><a href='/logout'>Logout</a></nav>"
-    );
-
-    if (err) {
-      response.write("<br /><div>No new products available.</div>");
-    } else {
-      response.write(`<br /><div>New product data - ${splittedData}</div>`);
-    }
-
-    response.write("</body>");
-    response.write("</html>");
-
-    return response.end();
-  });
-};
 
 const addNewProduct = (request, response) => {
   const body = [];
@@ -94,4 +79,3 @@ const addNewProduct = (request, response) => {
   });
 };
 
-module.exports = { productRouting };

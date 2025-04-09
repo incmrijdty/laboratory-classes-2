@@ -1,4 +1,4 @@
-const fileSystem = require("fs");
+const fs = require("fs");
 const { STATUS_CODE } = require("../constants/statusCode");
 const path = require("path");
 const renderNewProductPage = require("../views/renderNewProductPage");
